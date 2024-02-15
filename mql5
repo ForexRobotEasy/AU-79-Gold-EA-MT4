@@ -1,0 +1,76 @@
+mql5
+// Program: AU 79 Gold EA MT4
+// Developer's Site: forexroboteasy.com
+// Development: Forex Robot Easy Team
+
+// Include necessary libraries
+#include <Trade\Trade.mqh>
+#include <Trade\SymbolInfo.mqh>
+#include <Trade\PositionInfo.mqh>
+#include <Trade\TradeContext.mqh>
+
+// Define constants
+#define STOP_LOSS 100     // Stop-loss level in pips
+#define TAKE_PROFIT 200   // Take-profit level in pips
+#define TRAILING_STOP 50  // Trailing stop level in pips
+
+// Initialize global variables
+CTrade trade;
+CSymbolInfo symbol;
+
+// Initialize EA
+void OnInit()
+{
+   trade.SetExpertMagicNumber(123456);  // Set expert magic number for identification
+   trade.SetExpertStopLoss(STOP_LOSS);  // Set expert stop-loss level
+   trade.SetExpertTakeProfit(TAKE_PROFIT);  // Set expert take-profit level
+   trade.SetExpertTrailingStop(TRAILING_STOP);  // Set expert trailing stop level
+}
+
+// Execute trades based on market analysis
+void OnTick()
+{
+   double bid = symbol.Bid();  // Get current bid price
+   double ask = symbol.Ask();  // Get current ask price
+   
+   // Add your complex algorithm here to forecast market trends and generate trade signals
+   
+   // Check if there is an open position
+   if (trade.PositionSelect(symbol.Name()))
+   {
+      // Check if the current position is in profit
+      if (trade.PositionProfit() > 0)
+      {
+         // Set trailing stop for the position
+         trade.PositionSetTrailingStop(symbol.Name(), TRAILING_STOP);
+      }
+   }
+   else
+   {
+      // Check if there is a buy signal
+      if (/* Add your buy signal condition here */)
+      {
+         // Open a buy position
+         trade.Buy(symbol.Name(), 0.1, bid, 0, 0);
+      }
+      
+      // Check if there is a sell signal
+      if (/* Add your sell signal condition here */)
+      {
+         // Open a sell position
+         trade.Sell(symbol.Name(), 0.1, ask, 0, 0);
+      }
+   }
+}
+
+// Provide documentation for installation, configuration, and usage of the EA
+string OnGetInformation()
+{
+   return 'AU 79 Gold EA MT4\nDeveloper's Site: forexroboteasy.com\nDevelopment: Forex Robot Easy Team\n\nInstructions:\n- Install the EA on the MT4 platform\n- Configure the expert settings\n- Monitor the EA's performance\n- Refer to the documentation for troubleshooting guidance';
+}
+
+// Provide recommendations for parameter settings
+string OnGetParameters()
+{
+   return 'Stop-loss: ' + STOP_LOSS + ' pips\nTake-profit: ' + TAKE_PROFIT + ' pips\nTrailing stop: ' + TRAILING_STOP + ' pips';
+}
